@@ -4,7 +4,7 @@ var Alien = function(_x) {
     this.health = 100;
     this.radius = 20;
     this.isDead = false;
-
+    
     this.draw = function() {
         if(this.health === 100) {
             fill('green');
