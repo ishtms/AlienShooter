@@ -10,6 +10,7 @@ function setup() {
 }
 
 function resetGame() {
+    isFinished = false;
     for(var index = 0; index < 10; index++) {
         alienArray.push(new Alien(index * (width/10) + 30));
     }
@@ -35,24 +36,36 @@ function keyReleased() {
 
 function draw() {
     background(115, 0, 23);
-    spaceship.draw();
-    if(alienArray.length === 0) {
-        alert("YOU WON!");
-        resetGame();
+    if(!isFinished) {
+        spaceship.draw();
+        if(alienArray.length === 0) {
+            alert("YOU WON!");
+            resetGame();
+        } else {
+            for(var index = bulletArray.length - 1; index >= 0; index--) {
+                if(bulletArray[index].isHit) {
+                    bulletArray.splice(index, 1);
+                }else {
+                    bulletArray[index].move();
+                }
+            }
+            for(var index = alienArray.length - 1; index >= 0; index--) {
+                if(alienArray[index].yPos >= spaceship.yPos) {
+                    isFinished = true;
+                    alienArray = [];
+                    break;
+                }
+                if(alienArray[index].isDead) {
+                    alienArray.splice(index, 1);
+                } else {
+                    alienArray[index].draw();
+                }
+            }
+        }
     } else {
-        for(var index = bulletArray.length - 1; index >= 0; index--) {
-            if(bulletArray[index].isHit) {
-                bulletArray.splice(index, 1);
-            }else {
-                bulletArray[index].move();
-            }
+        if(isFinished) {
+            alert("GAME FINISHED. YOU LOST LOSER!");
         }
-        for(var index = alienArray.length - 1; index >= 0; index--) {
-            if(alienArray[index].isDead) {
-                alienArray.splice(index, 1);
-            } else {
-                alienArray[index].draw();
-            }
-        }
+        resetGame();
     }
 }
