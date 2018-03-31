@@ -1,11 +1,19 @@
 var isFinished = false;
 var spaceship;
 var bulletArray = [];
+var alienArray = [];
+
 function setup() {
     createCanvas(window.innerWidth, window.innerHeight);
     spaceship = new Spaceship(width/2, height - 60);
+    resetGame();
 }
 
+function resetGame() {
+    for(var index = 0; index < 10; index++) {
+        alienArray.push(new Alien(index * (width/10) + 30));
+    }
+}
 function keyPressed() {
     
     if(keyCode === 32) { // fire gun
@@ -28,7 +36,23 @@ function keyReleased() {
 function draw() {
     background(115, 0, 23);
     spaceship.draw();
-    for(var index = 0; index < bulletArray.length; index++) {
-        bulletArray[index].move();
+    if(alienArray.length === 0) {
+        alert("YOU WON!");
+        resetGame();
+    } else {
+        for(var index = bulletArray.length - 1; index >= 0; index--) {
+            if(bulletArray[index].isHit) {
+                bulletArray.splice(index, 1);
+            }else {
+                bulletArray[index].move();
+            }
+        }
+        for(var index = alienArray.length - 1; index >= 0; index--) {
+            if(alienArray[index].isDead) {
+                alienArray.splice(index, 1);
+            } else {
+                alienArray[index].draw();
+            }
+        }
     }
 }
